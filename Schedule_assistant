@@ -1,0 +1,37 @@
+timeslots = [[7, 8], [12, 17], [19, 21]]
+
+def sleep_tester(timeslots):
+    timeslots = [[datetime.datetime.combine(datetime.date.today(), datetime.time(num)) for num in slot] for slot in timeslots]
+    #now = datetime.datetime.now()
+    now = datetime.datetime(2020,11,19,23,35,0,0)
+    #If it's before the first slot, wait for the first slot
+    if timeslots[0][0] > now:
+        sleep_time = timeslots[0][0] - now
+
+    #If it's after the last slot, wait until the first slot tomorrow.
+    elif timeslots[-1][-1] < now:
+        sleep_time = timeslots[0][0] + datetime.timedelta(days=1) - now
+
+    else:
+        for slots in timeslots:
+            #if it falls between the slots, no sleep & return
+            if slots[0] < now < slots[1]:
+                sleep_time = 0
+                break
+            #if it is after the slot, move on to the next slot
+            elif now > slots[1]:
+                pass
+            #if it's before the slot, take the time until that slot
+            elif now < slots[0]:
+                sleep_time = slots[0] - now
+
+    sleep_time = sleep_time.seconds
+
+    if sleep_time == 0:
+        print("No sleep for the wicked")
+    else: print("Having some down time. Back in " + str(sleep_time//3600), "hours and ", str((sleep_time//60)%60), "minutes")
+
+    return sleep_time
+
+
+print(sleep_tester(timeslots=timeslots))
