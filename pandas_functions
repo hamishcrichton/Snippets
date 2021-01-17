@@ -1,0 +1,20 @@
+###Handling Null values
+pd.isnull() #checks for null Values, and returns a boolean array 
+pd.isnull().sum() #returns a sum of null/missing values, run . 
+pd.notnull() is the opposite of pd.isnull(). 
+
+df.dropna() #drop NA rows  
+df.dropna(axis=1) #drop columns. 
+
+A different approach would be to fill the missing values with other values by using 
+df.fillna(x) #fills missing values with x  
+s.fillna(s.mean()) #replace all null values with the mean (mean can be replaced with almost any function from the statistics section).
+
+
+s.replace(1,'one') #replace 1 values with 'one'. 
+s.replace([1,3],['one','three']) #replace all 1 with 'one' and 3 with 'three'. 
+
+df.rename(columns={'old_name': 'new_ name'})  
+df.set_index('column_one') to change the index of the data frame.
+
+df.drop_duplicates()
