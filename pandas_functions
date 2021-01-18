@@ -18,3 +18,15 @@ df.rename(columns={'old_name': 'new_ name'})
 df.set_index('column_one') to change the index of the data frame.
 
 df.drop_duplicates()
+
+describe() #shows a quick statistic summary of your data
+
+df[df["A"] > 0]
+df2[df2["E"].isin(["two", "four"])]
+
+
+df.at[dates[0], "A"] = 0 #Setting values by label
+
+pd.pivot_table(df, values="D", index=["A", "B"], columns=["C"]) #creates a pivot table.
+
+###Guide to windowing functions: https://pandas.pydata.org/pandas-docs/stable/user_guide/window.html#window-overview
