@@ -1,0 +1,17 @@
+# take a train & text set of x vals and normalise using sklearn MinMaxScaler
+
+from sklearn.preprocessing import MinMaxScaler
+
+def data_normalise(train, test):
+    array = train.values
+    train_x = array
+    array = test.values
+    test_x = array
+    scaler= MinMaxScaler().fit(train_x)
+    normalized_train = scaler.transform(train_x)
+    normalized_test = scaler.transform(test_x)
+    train_df= pd.DataFrame(normalized_train)
+    train_df.columns=train.columns
+    test_df = pd.DataFrame(normalized_test)
+    test_df.columns = test.columns
+    return train_df, test_df
