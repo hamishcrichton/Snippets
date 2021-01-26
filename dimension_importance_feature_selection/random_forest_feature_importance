@@ -30,3 +30,37 @@ def dt_cart_feature_importance_graphs(in_x, in_y, x_columns):
     plt.ylabel('Importance')
     plt.title('Sorted Extra Trees Feature Importance')
     plt.show()
+    
+    
+def dt_cart_fs(threshold, train_x, train_y, test_x):
+    """
+    CART algorithm
+
+    importance values to be set between ### to ###
+
+    """
+    np.random.seed(seed=3)
+
+    # train data set
+    x_train = train_x.values
+    y_train = train_y.values  # label class
+
+    # fit the model on the training data set
+    model = ExtraTreesClassifier()
+    model.fit(x_train, y_train)
+    importance_var = model.feature_importances_
+
+    # select the columns with an importance value below threshold
+    columns_below_threshold = []
+    for i in range(len(importance_var)):
+        if importance_var[i] <= threshold:
+            columns_below_threshold.append(train_x.columns.values[i])
+
+    # drop the columns selected form the train data set
+    df_x_train = train_x.drop(columns=columns_below_threshold)
+    col_names = df_x_train.columns.values
+
+    # drop the columns selected from the training data set form the test data set
+    df_x_test = test_x.drop(columns=columns_below_threshold)
+
+    return df_x_train, df_x_test, col_names
