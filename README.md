@@ -1,6 +1,11 @@
 # Snippets
 Useful code chunks
 
+<a href=#>**Pandas**</a>: Folder of snippets grouped by use in Pandas. [Update when split out]
+
+<a href=#>**Visualisations**</a>: Functions and examples of visualisation methods using tools such as Plotly and Matplotlib. [Update when complete]
+
+
 <a href=https://github.com/hamishcrichton/Snippets/blob/main/gmail%20emails>**gmail code**</a>: Send emails from a configured gmail account. Requires to & from email accounts, with a from account which has had relaxed security settings. Requires the "Allow less secure apps" to be set to "ON". Alternative is to use OAuth for secure access (see <a href = https://developers.google.com/gmail/api/quickstart/python>here</a>). Recommended that you use environment variables to set confidential information such as email and password.
 
 
