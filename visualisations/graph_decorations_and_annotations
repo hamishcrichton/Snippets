@@ -1,0 +1,185 @@
+# Overview of several ways to augment plotly graphs
+
+## All below require an existing figure e.g. bar/line
+
+## If using Colab, will need to run the below code and then restart runtime to get latest/compatible plotly:
+!pip install plotly --upgrade
+
+# To add a block of colour to a graph
+fig.add_vrect(
+    x0="1957", x1="1975",                     # x0 is start point on x axis, x1 is end
+    fillcolor="LightSalmon", opacity=0.5,     # See plotly colours for options & opacity
+    layer="below", line_width=0)              # Keep below
+    
+# repeat above for each block
+
+# Add a line to a point to annotate
+
+fig.add_shape(type="line",
+    xref="x", yref="y",                     # sets x val to look at xaxis, y to look at yaxis
+    x0=1961, y0=52, x1=1961, y1=100,        # 0 & 1 vals define start and stop. Cartesian plot of coords
+    line=dict( 
+        color="black",
+        width=3,
+    ))
+
+# Add text annotations
+# Uses scatter plot type with text param filled. 
+
+# Create scatter trace of text labels
+fig.add_trace(go.Scatter(
+    x=cumu_missions_xlabs,                # list of x vals to plot
+    y=cumu_missions_ylabs,                # list of y vals to plot
+    text=cumu_missions_txtlabs,           # list of text labels
+    mode="text",                          # set to text
+))
+
+# Recommended that list of text annotations built as you go with lines or eras. For example see below:
+
+# cumulative missions
+years = mission_df.year.unique()
+years.sort() # list of years in order for x axis
+
+# Used for text labels on plot
+cumu_missions_xlabs = []
+cumu_missions_ylabs = []
+cumu_missions_txtlabs = []
+
+missions_pa = []
+
+for year in years:
+  tmp = mission_df[mission_df.year == year].shape[0] # loop yrs, take rows in yr
+  missions_pa.append(tmp)
+
+fig = go.Figure([go.Scatter(x=years, y=missions_pa,
+                 line=dict(color='LightSeaGreen', width=4))]
+                )
+
+# era annotations
+fig.add_vrect(
+    x0="1957", x1="1975",
+    fillcolor="LightSalmon", opacity=0.5,
+    layer="below", line_width=0)
+
+cumu_missions_xlabs.append(1966)
+cumu_missions_ylabs.append(10)
+cumu_missions_txtlabs.append("Space Race")
+
+fig.add_vrect(
+    x0="1975", x1="2000",
+    fillcolor="lightgrey", opacity=0.5,
+    layer="below", line_width=0)
+
+cumu_missions_xlabs.append(1988)
+cumu_missions_ylabs.append(10)
+cumu_missions_txtlabs.append("Multinational Cooperation")
+
+fig.add_vrect(
+    x0="2000", x1="2020",
+    fillcolor="khaki", opacity=0.5,
+    layer="below", line_width=0)
+
+cumu_missions_xlabs.append(2010)
+cumu_missions_ylabs.append(10)
+cumu_missions_txtlabs.append("Private Space Race")
+
+# Event annotations
+# First manned flight
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=1961, y0=52, x1=1961, y1=100,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(1961)
+cumu_missions_ylabs.append(105)
+cumu_missions_txtlabs.append("First Person In Space")
+
+# Moon landing
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=1969, y0=103, x1=1969, y1=75,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(1969)
+cumu_missions_ylabs.append(70)
+cumu_missions_txtlabs.append("Moon Landing")
+
+#ESA founded
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=1975, y0=113, x1=1975, y1=75,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(1975)
+cumu_missions_ylabs.append(70)
+cumu_missions_txtlabs.append("ESA Founded")
+
+#End of cold war
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=1991, y0=59, x1=1991, y1=100,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(1991)
+cumu_missions_ylabs.append(105)
+cumu_missions_txtlabs.append("Cold War Ends")
+
+#ISS launched
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=1998, y0=68, x1=1998, y1=110,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(1998)
+cumu_missions_ylabs.append(115)
+cumu_missions_txtlabs.append("ISS Launched")
+
+#Reusable rocket
+fig.add_shape(type="line",
+    xref="x", yref="y",
+    x0=2015, y0=52, x1=2015, y1=40,
+    line=dict(
+        color="black",
+        width=3,
+    ))
+
+cumu_missions_xlabs.append(2015)
+cumu_missions_ylabs.append(35)
+cumu_missions_txtlabs.append("First Reusable Rocket")
+
+# Create scatter trace of text labels
+fig.add_trace(go.Scatter(
+    x=cumu_missions_xlabs,
+    y=cumu_missions_ylabs,
+    text=cumu_missions_txtlabs,
+    mode="text",
+))
+
+fig.update_layout(title_text="Launches By Year", 
+                  xaxis_title="Year",
+                  yaxis_title="Number of Launches",
+                  font_color="black",
+                  font_size=16,
+                  title={
+                  'y':0.9,
+                  'x':0.5,
+                  'xanchor': 'center',
+                  'yanchor': 'top',
+                  'font_size':25},
+                  )
+fig.show()
