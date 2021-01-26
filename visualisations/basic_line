@@ -1,0 +1,26 @@
+# Basics of a line chart in plotly
+
+import plotly.graph_objects as go
+
+fig = go.Figure([go.Scatter(x=years,                                          # x axis val e.g. time 
+                            y=missions_pa,                                    # quant to plot on y
+                            line=dict(color='LightSeaGreen', width=4))        # can also change line style e.g. dash='dot'
+                            ])
+
+fig.update_layout(title_text="Launches By Year", 
+                  xaxis_title="Year",
+                  yaxis_title="Number of Launches",
+                  font_color="black",
+                  font_size=16,
+                  title={
+                  'y':0.9,
+                  'x':0.5,
+                  'xanchor': 'center',
+                  'yanchor': 'top',
+                  'font_size':25},
+                  )
+fig.show()
+
+# plotly official guide: https://plotly.com/python/line-charts/
+
+# plotly colours: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
