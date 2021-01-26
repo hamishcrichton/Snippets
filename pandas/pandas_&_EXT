@@ -1,0 +1,11 @@
+# Encode categorical data
+
+from sklearn.preprocessing import OrdinalEncoder
+
+ord_enc = OrdinalEncoder()
+
+for target_col in x_cols_to_encode:                                                   # list of column names to encode
+  df[target_col] = ord_enc.fit_transform(df[[target_col]])                            # encode each column
+  
+# could use map as well.
+
