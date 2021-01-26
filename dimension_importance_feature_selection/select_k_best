@@ -26,3 +26,26 @@ def select_k_best_graph(in_x, in_y, quant):
     plt.ylabel('Importance')
     plt.title('Select K Best Feature Importance')
     plt.show()
+
+
+def select_k_best_application(train_x, train_y, test_x, x_col, quant):
+    """
+    Select K Best Algorithm
+
+    applies select_k_best scikit learn method and returns feature set
+    quant should be number of features to be selected
+
+    """
+    x_train = train_x.values
+    Y = train_y.values
+    skb_fit = SelectKBest(score_func=f_classif, k=quant)
+    features = skb_fit.fit_transform(x_train, Y)
+    # https://stackoverflow.com/questions/39839112/the-easiest-way-for-getting-feature-names-after-running-selectkbest-in-scikit-le
+    mask = skb_fit.get_support()  # list of booleans
+    new_features = []  # The list of your K best features
+    for bool, feature in zip(mask, x_col):
+        if bool:
+            new_features.append(feature)
+    train_features_df = pd.DataFrame(features, columns=new_features)
+    test_features_df = test_x.filter(new_features, axis=1)
+    return train_features_df, test_features_df
