@@ -29,7 +29,25 @@ df.at[dates[0], "A"] = 0 #Setting values by label
 
 df.col.value_counts() # returns a count of each unique value in a column
 
-pd.pivot_table(df, values="D", index=["A", "B"], columns=["C"]) #creates a pivot table.
+def map_identity(sex): #map a categorical to binary/tokenised value
+    if sex.lower() == 'male':
+        return 1
+    elif sex.lower() == 'female':
+        return 0
+df["perc_male"] = df["sex"].map(map_identity)
+
+df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
+    "name":pd.Series.nunique,
+    "nationality":pd.Series.nunique,
+    "perc_male":np.mean,
+    "perc_military": np.mean,
+    "hours_mission": np.mean,
+    "age": np.mean,
+    "eva": np.mean,
+    "total_number_of_missions": np.mean}) #creates a pivot table.
+
+
+
 
 ###Guide to windowing functions: https://pandas.pydata.org/pandas-docs/stable/user_guide/window.html#window-overview
 
