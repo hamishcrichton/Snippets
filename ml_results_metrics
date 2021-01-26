@@ -1,0 +1,55 @@
+# get basic sklearn metrics from raw output categorical predictions
+
+from sklearn.metrics import *
+
+def multilabel_mcc(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    return matthews_corrcoef(y_true, y_pred)
+
+
+def multilabel_f1(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    return f1_score(y_true, y_pred, average='weighted')
+
+
+def multilabel_acc(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    return accuracy_score(y_true, y_pred)
+
+
+def multilabel_prec(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    return precision_score(y_true, y_pred, average='weighted')
+
+
+def multilabel_rec(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    return recall_score(y_true, y_pred, average='weighted')
+
+
+def count_correct(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    cm = confusion_matrix(y_true, y_pred)
+    cor = 0
+    fal = 0
+    for i in range(len(cm)):
+        for j in range(len(cm)):
+            if i==j:
+                cor += cm[i][j]
+            else:
+                fal += cm[i][j]
+    return cor
+
+
+def count_incorrect(y_true, y_pred):
+    y_true = np.argmax(y_true, axis=1)
+    cm = confusion_matrix(y_true, y_pred)
+    cor = 0
+    fal = 0
+    for i in range(len(cm)):
+        for j in range(len(cm)):
+            if i==j:
+                cor += cm[i][j]
+            else:
+                fal += cm[i][j]
+    return fal
