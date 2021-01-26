@@ -1,0 +1,32 @@
+from sklearn.ensemble import ExtraTreesClassifier
+
+def dt_cart_feature_importance_graphs(in_x, in_y, x_columns):
+    """
+    CART algorithm
+
+    takes imput data and displays two graphics of feature importance. Intended for use for selecting threshold for
+    full dt cart method
+    
+    requires input data to have been tokenised if categorical
+
+    """
+    x_train = in_x.values
+    y_train = in_y.values  # label class
+
+    # fit the model on the training data set
+    model = ExtraTreesClassifier()
+    model.fit(x_train, y_train)
+    importance_var = model.feature_importances_
+
+    feature_importance = pd.DataFrame({"features": x_columns,
+                                       "importance": importance_var})
+
+    feature_importance_sorted = feature_importance.sort_values("importance", ascending=False)         # can extract this if just looking to get features for further processing
+
+    plt.figure(figsize=(12,6))
+    plt.xticks(rotation=90)
+    plt.bar(feature_importance_sorted["features"], feature_importance_sorted["importance"])
+    plt.xlabel('Features')
+    plt.ylabel('Importance')
+    plt.title('Sorted Extra Trees Feature Importance')
+    plt.show()
