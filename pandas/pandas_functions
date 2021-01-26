@@ -1,33 +1,64 @@
 ###Handling Null values
 pd.isnull() #checks for null Values, and returns a boolean array 
+pd.isnull().count() # returns number of null values per col (can be run across df)
 pd.isnull().sum() #returns a sum of null/missing values, run . 
 pd.notnull() is the opposite of pd.isnull(). 
 
 df.dropna() #drop NA rows  
 df.dropna(axis=1) #drop columns. 
 
-A different approach would be to fill the missing values with other values by using 
+#### A different approach would be to fill the missing values with other values by using 
 df.fillna(x) #fills missing values with x  
 s.fillna(s.mean()) #replace all null values with the mean (mean can be replaced with almost any function from the statistics section).
 
-
+### Swap values out
 s.replace(1,'one') #replace 1 values with 'one'. 
 s.replace([1,3],['one','three']) #replace all 1 with 'one' and 3 with 'three'. 
+df['col'].str.replace(' ', '') # use .str to enable string replacements
 
-df.rename(columns={'old_name': 'new_ name'})  
+#### Alternative method based on dict of values
+swap_keys = patch_values_dict.keys() # take keys of dict containing swaps
+for i in df.index: # run through df index
+   value = df.loc[i, 'col'] # take specific val
+   if value in swap_keys: # check if the val in dict keys
+     df.loc[i, 'col'] = patch_values_dict[value] # get key value and put in df
+
+### Manage df properties
+df.rename(columns={'old_name': 'new_name'})  
 df.set_index('column_one') to change the index of the data frame.
+df['col'].astype(float) # cast type of column e.g. float/int/str/datetime
 
-df.drop_duplicates()
+df.drop(columns=['col_name_to_drop']) # drop columns. Col name provided as list
+df.drop_duplicates() # drops duplicate records. Can specify list of cols to consider
+df.sort_values(by=['col_to_sort'], ascending=False) # sort df by a col, largest first
+df['col'].copy() # create a copy of a col to preserve it (aliaisng issues). Assume deep_copy also works
 
-describe() #shows a quick statistic summary of your data
+df.describe() #shows a quick statistic summary of your data
+df.describe(include='all') # all ensure cont & cat data shown
 
 df[df["A"] > 0]
 df2[df2["E"].isin(["two", "four"])]
 
+s.unique() # get numpy array of unique vals from a column
+df[df.col == val].shape[0] # get number of entries for a specific val / match
 
 df.at[dates[0], "A"] = 0 #Setting values by label
 
 df.col.value_counts() # returns a count of each unique value in a column
+
+df = pd.concat([df_1, df_2], axis = 1) # concatenate dfs one under the other. Axis=0 is adding new cols
+df = df_1.merge(df_2, how='jointype', left_on="left_join_col", right_on="right_join_col") # merge/join dfs. Specify type with how
+
+
+### Value splitting
+df['col_to_split'].str.split("split_val", n = 1, expand = True) # split a colunmn into a new df with a col for each split
+df.col.str.split('split_val').str[-1] # take the last val split from a column. Change end index to take first/nth
+# Append .str.strip() to clean
+
+
+### Timedate nonsense
+df['col'] = df.date_col.apply(lambda datetime: datetime.year) # extract year from datetime col
+
 
 def map_identity(sex): #map a categorical to binary/tokenised value
     if sex.lower() == 'male':
