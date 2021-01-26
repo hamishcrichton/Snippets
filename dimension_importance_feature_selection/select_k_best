@@ -1,0 +1,28 @@
+# Use select_k_best from sklearn for univariate analysis of feature impact
+
+from sklearn.feature_selection import SelectKBest, f_classif
+
+def select_k_best_graph(in_x, in_y, quant):
+    """
+    Select K Best Algorithm
+
+    applies select_k_best scikit learn method and plots sorted feature importance
+    set quant either to number of columns, or to desired threshold number
+    
+    requires categorical data to have been encoded/tokenised
+    """
+    X = in_x.values
+    Y = in_y.values
+    plot_data = SelectKBest(score_func=f_classif, k=quant)                              # setup algo
+    fit = plot_data.fit(X, Y)                                                           # fit to data
+    indices = np.argsort(fit.scores_)[::-1]                                             # sorted index for feature importance
+    features = []
+    for i in range(quant):
+        features.append(in_x.columns[indices[i]])                 
+    plt.figure(figsize=(12,6))
+    plt.xticks(rotation=90)
+    plt.bar(features, fit.scores_[indices[range(quant)]], color='r', align='center')   # red bars plotted by feature importance
+    plt.xlabel('Features')
+    plt.ylabel('Importance')
+    plt.title('Select K Best Feature Importance')
+    plt.show()
