@@ -1,0 +1,21 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def correlation_plot(df):
+    """
+    Returns correlation plot from matplotlib using inbuilt pandas corr()
+    """
+    correlations = df.corr()                                  # get correlations
+    output_df = pd.DataFrame(correlations)                    # to new df
+    cols = output_df.columns                          
+    fig = plt.figure(figsize=(12, 12))                        
+    ax = fig.add_subplot(111)                             
+    cax = ax.matshow(correlations, vmin=-1, vmax=1)           # set colour scale
+    fig.colorbar(cax)
+    ticks = np.arange(0, len(cols), 1)                        # use cols to determine tick nos
+    ax.set_yticks(ticks)
+    ax.set_yticklabels(cols)                                  # label ticks with cols
+    plt.rcParams['font.size'] = '16'                          # label font size
+    plt.title('Feature Correlation Plot')
+    plt.show()
+    return output_df                                          # returns correlations df
