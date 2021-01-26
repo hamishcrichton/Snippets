@@ -1,0 +1,62 @@
+# Create a sankey based on count between a source and a target using plotly
+
+@TODO: Change to specify val & multiple steps
+@TODO: Look at ability to amend/tailor colour
+
+import plotly.graph_objects as go
+
+def create_sankey_indices(source, target):
+  """Create labels and dict to map needed to build sankey from inputs"""
+  source_uniques = source.unique()
+  target_uniques = target.unique()
+  sankey_labs = np.concatenate((source_uniques, target_uniques))
+  labels_dict = {}
+  count = 0
+  for lab in sankey_labs:
+    labels_dict[lab] = count
+    count += 1
+  return sankey_labs, labels_dict
+
+def make_lists(source, target, labels_dict):
+  """Create list of indices used to plot sankey. Setup to use count as value"""
+  source = source.tolist()
+  target = target.tolist()
+  source_indices = []
+  target_indices = []
+  for i, j in zip(source, target):
+    ind = labels_dict[i]
+    source_indices.append(ind)
+    ind = labels_dict[j]
+    target_indices.append(ind)
+  
+  value = len(source_indices)*[1]
+  return source_indices, target_indices, value
+
+
+def plot_sankey(sankey_labels, source_ind, target_ind, value, title):
+  """Plot sankey with valid inputs"""
+  fig = go.Figure(data=[go.Sankey(
+      node = dict(
+        pad = 15,
+        thickness = 20,
+        line = dict(color = "grey", width = 0.5),
+        label = sankey_labels,
+        color = "blue",
+      ),
+      link = dict(
+        source = source_ind, # indices correspond to labels, eg A1, A2, A1, B1, ...
+        target = target_ind,
+        value = value,
+        color = "green"
+    ))
+  ])
+
+  fig.update_layout(title_text=title, font_size=25)
+  fig.show()
+
+
+def generate_sankey(source, target, title='Sankey Plot'):
+  """end-to-end sankey creation"""
+  sankey_labs, labels_dict = create_sankey_indices(source, target)
+  source_indices, target_indices, value = make_lists(source, target, labels_dict)
+  plot_sankey(sankey_labs, source_indices, target_indices, value, title=title)
