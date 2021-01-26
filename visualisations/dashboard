@@ -1,0 +1,14 @@
+# """Create a canvas; define subplots, their position, size & titles """
+fig = make_subplots(rows=5, cols=2, vertical_spacing=0.1,horizontal_spacing=0, specs=[
+    [{}, {}],
+    [{'type': 'polar', 'rowspan': 4}, {'type': 'table', 'rowspan':2}],
+    [{}, {'type':'table'}],
+    [{}, {}],
+    [{}, {}]],
+                    row_heights=[1, 11, 3, 3, 3],
+                    column_width=[16, 9],
+                    subplot_titles=["", "", "Current Prediction<br> ",
+                                    "Prediction Values<br> ",  "", "", "",
+                                    "Prediction Tracker", "",
+                                    "True Label Tracker"])
+                                    
