@@ -1,0 +1,21 @@
+# Plot a bar chart, incl. stacked
+
+fig = go.Figure(data=[
+    go.Bar(name='State', x=years, y=missions_pa_state, marker_color='royalblue'), # x param is vals to plot on x, y on y
+    go.Bar(name='Private', x=years, y=missions_pa_private, marker_color='firebrick') # colours available here: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+])
+
+
+fig.update_layout(barmode='stack') # Change the bar mode -> stacked
+
+fig.update_layout(title_text="Private & State Launches By Year", 
+                  xaxis_title="Year",
+                  yaxis_title="Number of Launches",font_size=16,
+                  font_color="black",
+                  title={
+                  'y':0.9,
+                  'x':0.5,
+                  'xanchor': 'center',
+                  'yanchor': 'top',
+                  'font_size':25})
+fig.show()
