@@ -1,0 +1,45 @@
+def univar_analysis_target(df, output_df, x_cols, target):
+    """
+    Univariate mean analysis by class
+
+    For an input class, returns the feature mean for that target.
+    Intended for use within loop which loops through all class types
+    output_df should include the feature mean already for comparison
+
+    See univariate_analysis()
+    """
+    dict = {}
+    for col in x_cols:
+        col_avg = (df[col].mean())
+        dict[col] = col_avg
+    add_row = pd.DataFrame(dict, columns=x_cols, index=[target])
+    output_df = output_df.append(add_row, ignore_index=False)
+    return output_df
+
+
+def univariate_analysis(train, x_cols):
+    """
+    Univariate class mean analysis
+
+    Uses univar_analysis_target() method to generate full table for all class labels, avg, and the sum of squared
+    difference for each feature between the class labels and the mean
+
+    """
+    target_col = train.drop(columns=x_cols)
+    unique_targets = target_col.Target.unique()  # List of class labels
+    univar_df = pd.DataFrame(columns=x_cols)
+    univar_df = univar_analysis_target(train, univar_df, x_cols, "avg")  # Mean for each feature / col
+    for target in unique_targets:  # loop adds a row and calculate mean for each class for each feature / col
+        target_df = train[train["Target"] == target]
+        univar_df = univar_analysis_target(target_df, univar_df, x_cols, target)
+    univar_df = univar_df.T
+    univar_index = univar_df.index
+    univar_col = univar_df.columns
+    univar_df["SSD"] = 0
+    for i in univar_index:
+        sum_square_diff = 0
+        for j in range(1, 7):
+            sum_square_diff += (univar_df.loc[i, univar_col[0]] - univar_df.loc[i, univar_col[j]]) ** 2
+        univar_df.loc[i, "SSD"] = sum_square_diff
+
+    return (univar_df)
