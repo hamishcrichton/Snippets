@@ -1,0 +1,71 @@
+from sklearn.svm import LinearSVC
+from sklearn.feature_selection import RFECV
+from sklearn.feature_selection import RFE
+
+def rfe_fs_graph(train_x, train_y, x_columns):
+    """Recursive Feature Elimination
+    n_feature = None means half of the feature are selected
+    algorithm used = LinearSVC"""
+
+    np.random.seed(seed=3)
+
+    # train data set
+    x_train = train_x.values
+    y_train = train_y.values
+
+    # fit the model on the training data set
+    svm = LinearSVC()
+    rfe = RFECV(svm)
+    rfe = rfe.fit(x_train, y_train)
+
+    optimal_feats = rfe.n_features_
+    print("Optimal Feature No:")
+    print(optimal_feats)
+
+    plt.figure()
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score (# of correct classifications)")
+    plt.title('RFE Feature Accuracy Scores')
+    plt.plot(range(1, len(rfe.grid_scores_) + 1), rfe.grid_scores_)
+    plt.show()
+
+    # https: // scikit - learn.org / stable / auto_examples / feature_selection / plot_rfe_with_cross_validation.html
+    ranked_col = rfe.ranking_
+    feature_ranking = pd.DataFrame({"Features": x_columns,
+                                    "Ranking": ranked_col})
+    feature_ranking_sorted = feature_ranking.sort_values("Ranking", ascending=True)
+
+    return feature_ranking_sorted
+
+
+def rfe_fs(train_x, train_y, test, x_columns, n_feature=None):
+    """Recursive Feature Elimination
+    n_feature = None means half of the feature are selected
+    algorithm used = LinearSVC"""
+
+    np.random.seed(seed=3)
+
+    # train data set
+    x_train = train_x.values
+    y_train = train_y.values
+
+    # fit the model on the training data set
+    svm = LinearSVC()
+    rfe = RFE(svm, n_feature)
+    rfe = rfe.fit(x_train, y_train)
+
+    ranked_col = rfe.ranking_
+    feature_ranking = pd.DataFrame({"Features": x_columns,
+                                    "Ranking": ranked_col})
+    feature_ranking_sorted = feature_ranking.sort_values("Ranking", ascending=True)
+
+    columns_not_ranked_1 = []
+    for i in range(len(ranked_col)):
+        if ranked_col[i] != 1:
+            columns_not_ranked_1.append(train_x.columns.values[i])
+
+    # drop the columns selected from train and test data sets
+    df_x_train = train_x.drop(columns=columns_not_ranked_1)
+    df_x_test = test.drop(columns=columns_not_ranked_1)
+
+    return df_x_train, df_x_test, feature_ranking_sorted
