@@ -19,3 +19,27 @@ def correlation_plot(df):
     plt.title('Feature Correlation Plot')
     plt.show()
     return output_df                                          # returns correlations df
+
+
+def correlation_fs(train, x_train, x_test, x_cols, threshold):
+    """
+    Returns correlation plot
+
+    """
+    correlations_df = train.corr()
+    features_to_drop = []
+    for i in range(len(x_cols)):
+        for j in range(i):
+            if i != j:
+                if (x_cols[i] in features_to_drop) or (x_cols[j] in features_to_drop):
+                    pass
+                else:
+                    if abs(correlations_df.loc[x_cols[i], x_cols[j]]) >= threshold:
+                        if abs(correlations_df.loc[x_cols[i], "Target"]) > abs(
+                                correlations_df.loc[x_cols[j], "Target"]):
+                            features_to_drop.append(x_cols[j])
+                        else:
+                            features_to_drop.append(x_cols[i])
+    x_train_out = x_train.drop(columns=features_to_drop)
+    x_test_out = x_test.drop(columns=features_to_drop)
+    return x_train_out, x_test_out
