@@ -1,3 +1,9 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import matplotlib.animation as animation
+
+
 def draw_barchart(current_year):
     dff = df[df["year"].eq(current_year)].sort_values(by='nationality', ascending=True).tail(10)
     ax.clear()
