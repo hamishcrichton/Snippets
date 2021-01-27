@@ -60,12 +60,7 @@ df.col.str.split('split_val').str[-1] # take the last val split from a column. C
 df['col'] = df.date_col.apply(lambda datetime: datetime.year) # extract year from datetime col
 
 
-def map_identity(sex): #map a categorical to binary/tokenised value
-    if sex.lower() == 'male':
-        return 1
-    elif sex.lower() == 'female':
-        return 0
-df["perc_male"] = df["sex"].map(map_identity)
+
 
 df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
     "name":pd.Series.nunique,
@@ -78,7 +73,33 @@ df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
     "total_number_of_missions": np.mean}) #creates a pivot table.
 
 
+#Using an apply function to create a new df column based on existing values
+def calculate_taxes(price):
+    taxes = price * 0.12
+    return taxes
+df['taxes'] = df.price.apply(calculate_taxes)
 
+#Alternatively use a map function
+def map_identity(sex): #map a categorical to binary/tokenised value
+    if sex.lower() == 'male':
+        return 1
+    elif sex.lower() == 'female':
+        return 0
+df["perc_male"] = df["sex"].map(map_identity)
+
+
+
+#Filtering dataframes based on multiple values
+filtered_data = df[(df.price > 11.99) & (df.topping == 'Pineapple')]
+
+#Create bins for a value range
+bins = [0, 5, 15, 30]
+names = ['Cheap', 'Normal', 'Expensive']
+df['price_point'] = pd.cut(df.price, bins, labels=names)
+
+q = []
+for root, dirnames, filenames in os.walk(folder):
+    for file in filenames:
 
 ###Guide to windowing functions: https://pandas.pydata.org/pandas-docs/stable/user_guide/window.html#window-overview
 
