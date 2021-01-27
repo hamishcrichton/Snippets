@@ -1,3 +1,20 @@
+strptime() can read strings with date and time information and convert them to datetime objects
+my_string = '2019-10-31'
+my_date = datetime.strptime(my_string, "%Y-%m-%d") #Create date object in given time format yyyy-mm-dd: full directives here https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+
+strftime() converts datetime objects back into strings.
+year = now.strftime("%Y")
+print("Year:", year)
+
+print('Month: ', my_date.month) # To Get month from date
+print('Year: ', my_date.year) # To Get month from year
+
+# Difference between two dates
+delta = date2 - date1
+print("Difference: ", delta.days)
+
+Schedule assistant
+
 timeslots = [[7, 8], [12, 17], [19, 21]]
 
 def sleep_tester(timeslots):
