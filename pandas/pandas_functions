@@ -26,6 +26,7 @@ for i in df.index: # run through df index
 ### Manage df properties
 df.rename(columns={'old_name': 'new_name'})  
 df.set_index('column_one') to change the index of the data frame.
+df.reset_index() # set a new index from 0
 df['col'].astype(float) # cast type of column e.g. float/int/str/datetime
 
 df.drop(columns=['col_name_to_drop']) # drop columns. Col name provided as list
@@ -46,9 +47,9 @@ df.at[dates[0], "A"] = 0 #Setting values by label
 
 df.col.value_counts() # returns a count of each unique value in a column
 
-df = pd.concat([df_1, df_2], axis = 1) # concatenate dfs one under the other. Axis=0 is adding new cols
+df = pd.concat([df_1, df_2], axis = 1) # concatenate dfs one under the other. Axis=0 is adding new rows(?)
 df = df_1.merge(df_2, how='jointype', left_on="left_join_col", right_on="right_join_col") # merge/join dfs. Specify type with how
-
+df= df.append(other_df) # append a df to the bottom of an existing one. 
 
 ### Value splitting
 df['col_to_split'].str.split("split_val", n = 1, expand = True) # split a colunmn into a new df with a col for each split
@@ -104,3 +105,7 @@ for root, dirnames, filenames in os.walk(folder):
 ###Guide to windowing functions: https://pandas.pydata.org/pandas-docs/stable/user_guide/window.html#window-overview
 
 ###Guide to basic visualisations: https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html
+
+#Create a df from a list comprehension
+sector_df = pd.DataFrame([company.text.strip()] for company in companies)
+
