@@ -109,4 +109,8 @@ for root, dirnames, filenames in os.walk(folder):
 #Create a df from a list comprehension
 df = pd.DataFrame([company.text.strip()] for company in companies)
 df = pd.DataFrame([calls.sid, calls.call_sid] for calls in self.client.recordings.list())
+df.columns = ['recordingid', 'callid']                         # then add col names 
 
+# whatever it was that this did
+self.incumbent_df = self.incumbent_df.append(self.combined_log.loc[~self.combined_log['callid'].isin(self.incumbent_df['callid'])],
+                                             ignore_index=True, sort=False)
