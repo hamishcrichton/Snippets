@@ -1,78 +1,15 @@
-###Handling Null values
-pd.isnull() #checks for null Values, and returns a boolean array 
-pd.isnull().count() # returns number of null values per col (can be run across df)
-pd.isnull().sum() #returns a sum of null/missing values, run . 
-pd.notnull() is the opposite of pd.isnull(). 
+###CREATING A NEW DATAFRAME
 
-df.dropna() #drop NA rows  
-df.dropna(axis=1) #drop columns. 
+#Create a df from a list comprehension
+df = pd.DataFrame([company.text.strip()] for company in companies)
+df = pd.DataFrame([calls.sid, calls.call_sid] for calls in self.client.recordings.list())
+df.columns = ['recordingid', 'callid']                         # then add col names
 
-#### A different approach would be to fill the missing values with other values by using 
-df.fillna(x) #fills missing values with x  
-s.fillna(s.mean()) #replace all null values with the mean (mean can be replaced with almost any function from the statistics section).
 
-### Swap values out
-s.replace(1,'one') #replace 1 values with 'one'. 
-s.replace([1,3],['one','three']) #replace all 1 with 'one' and 3 with 'three'. 
-df['col'].str.replace(' ', '') # use .str to enable string replacements
-
-#### Alternative method based on dict of values
-swap_keys = patch_values_dict.keys() # take keys of dict containing swaps
-for i in df.index: # run through df index
-   value = df.loc[i, 'col'] # take specific val
-   if value in swap_keys: # check if the val in dict keys
-     df.loc[i, 'col'] = patch_values_dict[value] # get key value and put in df
-
-### Manage df properties
-df.rename(columns={'old_name': 'new_name'})  
-df.set_index('column_one') to change the index of the data frame.
-df.reset_index() # set a new index from 0
-df['col'].astype(float) # cast type of column e.g. float/int/str/datetime
-
-df.drop(columns=['col_name_to_drop']) # drop columns. Col name provided as list
-df.drop_duplicates() # drops duplicate records. Can specify list of cols to consider
-df.sort_values(by=['col_to_sort'], ascending=False) # sort df by a col, largest first
-df['col'].copy() # create a copy of a col to preserve it (aliaisng issues). Assume deep_copy also works
-
-df.describe() #shows a quick statistic summary of your data
-df.describe(include='all') # all ensure cont & cat data shown
-
-df[df["A"] > 0]
-df2[df2["E"].isin(["two", "four"])]
-
-s.unique() # get numpy array of unique vals from a column
-df[df.col == val].shape[0] # get number of entries for a specific val / match
-
-df.at[dates[0], "A"] = 0 #Setting values by label
-
-df.col.value_counts() # returns a count of each unique value in a column
-
+###ADDING DATA TO A DATAFRAME
 df = pd.concat([df_1, df_2], axis = 1) # concatenate dfs one under the other. Axis=0 is adding new rows(?)
 df = df_1.merge(df_2, how='jointype', left_on="left_join_col", right_on="right_join_col") # merge/join dfs. Specify type with how
-df= df.append(other_df) # append a df to the bottom of an existing one. 
-
-### Value splitting
-df['col_to_split'].str.split("split_val", n = 1, expand = True) # split a colunmn into a new df with a col for each split
-df.col.str.split('split_val').str[-1] # take the last val split from a column. Change end index to take first/nth
-# Append .str.strip() to clean
-
-
-### Timedate nonsense
-df['col'] = df.date_col.apply(lambda datetime: datetime.year) # extract year from datetime col
-
-
-
-
-df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
-    "name":pd.Series.nunique,
-    "nationality":pd.Series.nunique,
-    "perc_male":np.mean,
-    "perc_military": np.mean,
-    "hours_mission": np.mean,
-    "age": np.mean,
-    "eva": np.mean,
-    "total_number_of_missions": np.mean}) #creates a pivot table.
-
+df= df.append(other_df) # append a df to the bottom of an existing one.
 
 #Using an apply function to create a new df column based on existing values
 def calculate_taxes(price):
@@ -88,29 +25,98 @@ def map_identity(sex): #map a categorical to binary/tokenised value
         return 0
 df["perc_male"] = df["sex"].map(map_identity)
 
+# append incumbent_df with all values in the combined_log which are NOT (~) already in the incumbent
+#checks whether values are already in the incumbent log by comparing the 'callid' column of both df.
+incumbent_df = incumbent_df.append(self.combined_log.loc[~self.combined_log['callid'].isin(incumbent_df['callid'])],
+                                             ignore_index=True, sort=False)
 
 
-#Filtering dataframes based on multiple values
+###BASIC DATA CLEANING
+
+#Handling Null values
+pd.isnull() #checks for null Values, and returns a boolean array 
+pd.isnull().count() # returns number of null values per col (can be run across df)
+pd.isnull().sum() #returns a sum of null/missing values, run . 
+pd.notnull() is the opposite of pd.isnull(). 
+df.dropna() #drop NA rows
+df.dropna(axis=1) #drop columns. 
+df.fillna(x) #fills missing values with x
+s.fillna(s.mean()) #replace all null values with the mean (mean can be replaced with almost any function from the statistics section).
+
+df.drop(columns=['col_name_to_drop']) # drop columns. Col name provided as list
+df.drop_duplicates() # drops duplicate records. Can specify list of cols to consider
+df.sort_values(by=['col_to_sort'], ascending=False) # sort df by a col, largest first
+df['col'].copy() # create a copy of a col to preserve it (aliaisng issues). Assume deep_copy also works
+
+
+###SUMMARY STATISTICS
+
+df.col.value_counts() # returns a count of each unique value in a column
+df.describe() #shows a quick statistic summary of your data
+df.describe(include='all') # all ensure cont & cat data shown
+s.unique() # get numpy array of unique vals from a column
+df[df.col == val].shape[0] # get number of entries for a specific val / match
+
+# Manage df properties
+df.rename(columns={'old_name': 'new_name'})
+df.set_index('column_one') to change the index of the data frame.
+df.reset_index() # set a new index from 0
+df['col'].astype(float) # cast type of column e.g. float/int/str/datetime
+
+
+###FILTERING DATA
+df[df["A"] > 0]
+df2[df2["E"].isin(["two", "four"])]
 filtered_data = df[(df.price > 11.99) & (df.topping == 'Pineapple')]
 
-#Create bins for a value range
+
+###SWAPPING VALUES
+s.replace(1,'one') #replace 1 values with 'one'. 
+s.replace([1,3],['one','three']) #replace all 1 with 'one' and 3 with 'three'. 
+df['col'].str.replace(' ', '') # use .str to enable string replacements
+
+# Alternative method based on dict of values
+swap_keys = patch_values_dict.keys() # take keys of dict containing swaps
+for i in df.index: # run through df index
+   value = df.loc[i, 'col'] # take specific val
+   if value in swap_keys: # check if the val in dict keys
+     df.loc[i, 'col'] = patch_values_dict[value] # get key value and put in df
+
+
+df.at[dates[0], "A"] = 0 #Setting values by label
+
+### Value splitting
+df['col_to_split'].str.split("split_val", n = 1, expand = True) # split a colunmn into a new df with a col for each split
+df.col.str.split('split_val').str[-1] # take the last val split from a column. Change end index to take first/nth
+# Append .str.strip() to clean
+
+
+### Timedate nonsense
+df['col'] = df.date_col.apply(lambda datetime: datetime.year) # extract year from datetime col
+
+#Create a pivot table: various aggregation functions exist, including:
+##pd.Series.nunique (count unique)
+##all np maths functions
+#N.B. Not all rows/columns are named- save to csv and open to ensure titles
+
+df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
+    "name":pd.Series.nunique,
+    "nationality":pd.Series.nunique,
+    "perc_male":np.mean,
+    "perc_military": np.mean,
+    "hours_mission": np.mean,
+    "age": np.mean,
+    "eva": np.mean,
+    "total_number_of_missions": np.mean}) #creates a pivot table.
+
+
+#Create bins for a value range & add to a new df column
 bins = [0, 5, 15, 30]
 names = ['Cheap', 'Normal', 'Expensive']
 df['price_point'] = pd.cut(df.price, bins, labels=names)
 
-q = []
+
 for root, dirnames, filenames in os.walk(folder):
     for file in filenames:
 
 ###Guide to windowing functions: https://pandas.pydata.org/pandas-docs/stable/user_guide/window.html#window-overview
-
-###Guide to basic visualisations: https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html
-
-#Create a df from a list comprehension
-df = pd.DataFrame([company.text.strip()] for company in companies)
-df = pd.DataFrame([calls.sid, calls.call_sid] for calls in self.client.recordings.list())
-df.columns = ['recordingid', 'callid']                         # then add col names 
-
-# whatever it was that this did
-self.incumbent_df = self.incumbent_df.append(self.combined_log.loc[~self.combined_log['callid'].isin(self.incumbent_df['callid'])],
-                                             ignore_index=True, sort=False)
