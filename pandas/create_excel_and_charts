@@ -1,0 +1,45 @@
+def create_sheet(writer, df, sheet_name):
+    df.to_excel(writer, sheet_name=sheet_name)
+    worksheet = writer.sheets[sheet_name]
+    workbook = writer.book
+      
+    chart = workbook.add_chart({'type': 'line'})
+    
+    chart.add_series({
+        'name': sheet_name,
+        'categories': [sheet_name, 1, 0, 11, 0],
+        'values': [sheet_name, 1, 1, 11, 1],
+    })
+    
+    column_chart = workbook.add_chart({'type': 'column'})
+    
+    column_chart.add_series({
+        'name': sheet_name,
+        'categories': [sheet_name, 1, 0, 11, 0],
+        'values': [sheet_name, 1, 2, 11, 2],
+        'y2_axis': True,
+    })
+    
+    chart.combine(column_chart)
+    chart.set_title({'name': sheet_name})
+    chart.set_x_axis({'name': 'Date'})
+    chart.set_y_axis({'name': 'Value'})
+    column_chart.set_y2_axis({'name': '%-chg'})
+    
+    worksheet.insert_chart("E1", chart)
+
+writer = pd.ExcelWriter("financials.xlsx", engine='xlsxwriter')
+workbook = writer.book
+
+create_sheet(writer, rev, 'Revenue')
+create_sheet(writer, eps, 'EPS')
+create_sheet(writer, fcf, 'FCF')
+
+workbook.close()writer = pd.ExcelWriter("financials.xlsx", engine='xlsxwriter')
+workbook = writer.book
+
+create_sheet(writer, rev, 'Revenue')
+create_sheet(writer, eps, 'EPS')
+create_sheet(writer, fcf, 'FCF')
+
+workbook.close()
