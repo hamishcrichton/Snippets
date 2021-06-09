@@ -107,7 +107,7 @@ df = pd.pivot_table(df, index=["year_of_mission", "mission_title"], aggfunc={
     "hours_mission": np.mean,
     "age": np.mean,
     "eva": np.mean,
-    "total_number_of_missions": np.mean}) #creates a pivot table.
+    "total_number_of_missions": np.mean}).unstack().to_frame().rename(columns={old,new}) #creates a pivot table.
 
 
 #Create bins for a value range & add to a new df column
